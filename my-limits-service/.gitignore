@@ -33,3 +33,4 @@ build/
 /.mvn/.mvn.iml
 /.mvn/.mvn1.iml
 /.mvn/
+/.mvn/wrapper/

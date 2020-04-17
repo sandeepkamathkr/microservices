@@ -1,0 +1,59 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "My Limits Service API documentation",
+    "version" : "1.0",
+    "title" : "My Limits Service API"
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "limits"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/limits" : {
+      "get" : {
+        "tags" : [ "limits" ],
+        "summary" : "retrieve Limits from Configuration",
+        "description" : "",
+        "operationId" : "retrieveLimitsFromConfiguration",
+        "responses" : {
+          "200" : {
+            "description" : "Request Successfully completed",
+            "schema" : {
+              "$ref" : "#/definitions/LimitConfiguration"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "description" : "Internal Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "LimitConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "maximum" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "minimum" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    }
+  }
+}
