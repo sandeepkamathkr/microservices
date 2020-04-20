@@ -1,0 +1,77 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "My Currency Exchange Service API documentation",
+    "version" : "1.0",
+    "title" : "My Currency Exchange Service API"
+  },
+  "host" : "localhost:8000",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "currency-exchange"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/currency-exchange/from/{from}/to/{to}" : {
+      "get" : {
+        "tags" : [ "currency-exchange" ],
+        "summary" : "retrieve Limits from Configuration",
+        "description" : "",
+        "operationId" : "retrieveLimitsFromConfiguration",
+        "parameters" : [ {
+          "name" : "from",
+          "in" : "path",
+          "description" : "from",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "to",
+          "in" : "path",
+          "description" : "to",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Request Successfully completed",
+            "schema" : {
+              "$ref" : "#/definitions/ExchangeValue"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "description" : "Internal Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ExchangeValue" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "from" : {
+          "type" : "string"
+        },
+        "to" : {
+          "type" : "string"
+        },
+        "conversionMultiple" : {
+          "type" : "number"
+        }
+      }
+    }
+  }
+}
