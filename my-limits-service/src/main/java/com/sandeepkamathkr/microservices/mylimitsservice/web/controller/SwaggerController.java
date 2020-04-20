@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Swagger redirection to swagger api documentation
  */
 @Controller
-@Profile("dev")
+@Profile({"dev","qa"})
 public class SwaggerController {
 
     /**
