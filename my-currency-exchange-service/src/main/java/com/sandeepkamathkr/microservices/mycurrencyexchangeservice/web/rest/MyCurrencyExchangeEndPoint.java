@@ -10,19 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
-@Api("/currency-exchange")
+@Api("/my-currency-exchange")
 @RestController
-@RequestMapping("/currency-exchange")
+@RequestMapping("/my-currency-exchange")
 @AllArgsConstructor
-public class CurrencyExchangeEndPoint {
+public class MyCurrencyExchangeEndPoint {
 
     private final Environment environment;
     private final ExchangeValueRepository exchangeValueRepository;
 
-    @ApiOperation(value = "retrieve Limits from Configuration", response = ExchangeValue.class)
+    @ApiOperation(value = "retrieve Exchange Value", response = ExchangeValue.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request Successfully completed"),
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -31,10 +30,16 @@ public class CurrencyExchangeEndPoint {
             @ApiResponse(code = 500, message = "Internal Error")})
 
     @GetMapping("/from/{from}/to/{to}")
-    public ExchangeValue retrieveLimitsFromConfiguration(@ApiParam(value = "from", required = true) @PathVariable(value = "from") String from,
+    public ExchangeValue retrieveExchangeValue(@ApiParam(value = "from", required = true) @PathVariable(value = "from") String from,
                                                          @ApiParam(value = "to", required = true) @PathVariable(value = "to") String to) {
 
-        Optional<ExchangeValue> exchangeValue = exchangeValueRepository.findAllByFromAndTo(from,to);
-        return exchangeValue.isPresent() ? exchangeValue.get(): null;
+        Optional<ExchangeValue> exchangeValue = exchangeValueRepository.findAllByFromAndTo(from, to);
+        if (exchangeValue.isPresent()) {
+            exchangeValue.get().setPort(
+                    Integer.parseInt(environment.getProperty("local.server.port")));
+            return exchangeValue.get();
+        } else {
+            return ExchangeValue.builder().build();
+        }
     }
 }
