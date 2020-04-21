@@ -1,6 +1,7 @@
 package com.sandeepkamathkr.microservices.mycurrencyconversionservice.web.rest;
 
 import com.sandeepkamathkr.microservices.mycurrencyconversionservice.bean.CurrencyConversion;
+import com.sandeepkamathkr.microservices.mycurrencyconversionservice.web.proxy.MyCurrencyExchangeServiceProxy;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
-@Api("/currency-converter")
+@Api("/my-currency-conversion")
 @RestController
-@RequestMapping("/currency-converter")
+@RequestMapping("/my-currency-conversion")
 @AllArgsConstructor
 public class CurrencyConversionEndPoint {
 
+    private final MyCurrencyExchangeServiceProxy myCurrencyExchangeServiceProxy;
 
     @ApiOperation(value = "Converts currency", response = CurrencyConversion.class)
     @ApiResponses(value = {
@@ -25,20 +27,44 @@ public class CurrencyConversionEndPoint {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 500, message = "Internal Error")})
 
+//    @GetMapping("/from/{from}/to/{to}/quantity/{quantity}")
+//    public CurrencyConversion currencyConversion(
+//            @ApiParam(value = "from", required = true) @PathVariable(value = "from") String from,
+//            @ApiParam(value = "to", required = true) @PathVariable(value = "to") String to,
+//            @ApiParam(value = "quantity", required = true) @PathVariable(value = "quantity") BigDecimal quantity) {
+//
+//        Map<String,String> uriVariables = new HashMap<>();
+//        uriVariables.put("from",from);
+//        uriVariables.put("to",to);
+//        ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate().getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}",CurrencyConversion.class,uriVariables);
+//        CurrencyConversion currencyConversion = responseEntity.getBody();
+//        return CurrencyConversion.builder()
+//                .id(1L)
+//                .from(from)
+//                .to(to)
+//                .conversionMultiple(currencyConversion.getConversionMultiple())
+//                .quantity(quantity)
+//                .totalCalculatedAmount(quantity.multiply(currencyConversion.getConversionMultiple()))
+//                .port(currencyConversion.getPort())
+//                .build();
+//    }
+
     @GetMapping("/from/{from}/to/{to}/quantity/{quantity}")
-    public CurrencyConversion retrieveLimitsFromConfiguration(
+    public CurrencyConversion currencyConversionFeign(
             @ApiParam(value = "from", required = true) @PathVariable(value = "from") String from,
             @ApiParam(value = "to", required = true) @PathVariable(value = "to") String to,
-            @ApiParam(value = "quantity", required = true) @PathVariable(value = "quantity") int quantity) {
+            @ApiParam(value = "quantity", required = true) @PathVariable(value = "quantity") BigDecimal quantity) {
 
+
+        CurrencyConversion currencyConversion = myCurrencyExchangeServiceProxy.retrieveExchangeValue(from,to);
         return CurrencyConversion.builder()
                 .id(1L)
                 .from(from)
                 .to(to)
-                .conversionMultiple(BigDecimal.valueOf(1))
-                .quantity(BigDecimal.valueOf(quantity))
-                .totalCalculatedAmount(BigDecimal.valueOf(quantity))
-                .port(0)
+                .conversionMultiple(currencyConversion.getConversionMultiple())
+                .quantity(quantity)
+                .totalCalculatedAmount(quantity.multiply(currencyConversion.getConversionMultiple()))
+                .port(currencyConversion.getPort())
                 .build();
     }
 }
