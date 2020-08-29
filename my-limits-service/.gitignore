@@ -34,3 +34,4 @@ build/
 /.mvn/.mvn1.iml
 /.mvn/
 /.mvn/wrapper/
+/src/main/resources/META-INF/additional-spring-configuration-metadata.json

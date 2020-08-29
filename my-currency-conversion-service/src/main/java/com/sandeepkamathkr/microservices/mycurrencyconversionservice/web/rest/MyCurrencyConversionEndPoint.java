@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("/my-currency-conversion")
 @AllArgsConstructor
-public class CurrencyConversionEndPoint {
+public class MyCurrencyConversionEndPoint {
 
     private final MyCurrencyExchangeServiceProxy myCurrencyExchangeServiceProxy;
 
@@ -56,7 +56,7 @@ public class CurrencyConversionEndPoint {
             @ApiParam(value = "quantity", required = true) @PathVariable(value = "quantity") BigDecimal quantity) {
 
 
-        CurrencyConversion currencyConversion = myCurrencyExchangeServiceProxy.retrieveExchangeValue(from,to);
+        CurrencyConversion currencyConversion = myCurrencyExchangeServiceProxy. retrieveExchangeValue(from,to);
         return CurrencyConversion.builder()
                 .id(1L)
                 .from(from)
